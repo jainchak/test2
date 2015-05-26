@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+		<title>Ionic Framework Example</title>
+		<link href="lib/ionic/css/ionic.css" rel="stylesheet">
+        <link href="css/style.css" rel="stylesheet">
+		<script src="lib/ionic/js/ionic.bundle.js"></script>
+		<script src="js/app.js"></script>
+	</head>
+
+	<body>
+
+    <ion-side-menus>
+      <ion-pane ion-side-menu-content="">
+        <ion-nav-bar class="bar-positive nav-title-slide-ios7">
+          <ion-nav-back-button class="button-icon"><span class="icon ion-ios7-arrow-left"></span></ion-nav-back-button>
+        </ion-nav-bar>
+        <ion-nav-view></ion-nav-view>
+      </ion-pane>
+
+      <ion-side-menu side="left">
+        <ion-header-bar class="bar bar-header bar-dark"></ion-header-bar>
+        <ion-content has-header="true">
+          <ion-list>
+            <ion-item href="#/" menu-close="">Home</ion-item>
+            <ion-item href="#/about" menu-close="">About</ion-item>
+            <ion-item href="#/donate" menu-close="">Donate</ion-item>
+          </ion-list>
+        </ion-content>
+      </ion-side-menu>
+      
+    </ion-side-menus>
+    
+    <script id="tabs.html" type="text/ng-template">
+      <ion-view title="Fuel Saver">
+
+        <ion-nav-buttons side="left">
+          <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
+        </ion-nav-buttons> 
+        
+
+        <ion-tabs class="tabs-icon-top tabs-positive">
+
+          <ion-tab title="Statistics" icon="ion-arrow-graph-up-right" href="#/tab/statistics">
+            <ion-nav-view name="statistics-tab"></ion-nav-view>
+          </ion-tab>
+
+          <ion-tab title="Fuels" icon="ion-android-car" ui-sref="tabs.fuels" >
+            <ion-nav-view name="fuels-tab"></ion-nav-view>
+          </ion-tab>
+            
+            <!--
+          <ion-tab title="More" icon="ion-more" href="#/tab/more" >
+            <ion-nav-view name="more-tab"></ion-nav-view>
+          </ion-tab>
+            -->
+        </ion-tabs>
+      </ion-view>
+    </script>
+    
+    <script id="statistics.html" type="text/ng-template">
+      <ion-view title="Statistics">
+        <ion-nav-buttons side="left">
+          <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
+        </ion-nav-buttons>        
+        <ion-content padding="true">
+          <h1 style="text-align: center;">Statistics Page</h1>
+        </ion-content>
+      </ion-view>
+    </script>   
+    
+    <script id="fuels.html" type="text/ng-template">
+      <ion-view title="Fuels">
+        <ion-nav-buttons side="left">
+          <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
+        </ion-nav-buttons>         
+        <ion-content padding="true">
+          <ion-list>
+            <ion-item ng-repeat="fuel in fuels" href="#/tab/fuels/{{fuel.id}}" class="item item-avatar">
+              id: {{fuel.id}}<br/>
+              vehicle name: {{fuel.vehicle.name}}<br/>
+              Date: {{fuel.date | date}}<br/>
+              Odometer Reading: {{fuel.odometer}}<br/>
+              Litres: {{fuel.litres}}<br/>
+              $/litre: {{fuel.litrerate | currency}}<br/>
+              Total $: {{fuel.total | currency}}<br/>
+              Fulltank: {{fuel.fulltank}}<br/>
+              Location: {{fuel.location}}
+            </ion-item>
+          </ion-list>
+        </ion-content>
+      </ion-view>
+    </script> 
+    
+    <script id="fuel.html" type="text/ng-template">
+      <ion-view title="Fuel Details">
+        <ion-nav-buttons side="left">
+          <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
+        </ion-nav-buttons>        
+        <ion-content padding="true">
+          <h1 style="text-align: center;">Fuel Details</h1>
+            id: {{fuel.id}}<br/>
+              vehicle name: {{fuel.vehicle.name}}<br/>
+              Date: {{fuel.date | date}}<br/>
+              Odometer Reading: {{fuel.odometer}}<br/>
+              Litres: {{fuel.litres}}<br/>
+              $/litre: {{fuel.litrerate | currency}}<br/>
+              Total $: {{fuel.total | currency}}<br/>
+              Fulltank: {{fuel.fulltank}}<br/>
+              Location: {{fuel.location}}
+        </ion-content>
+      </ion-view>
+    </script>        
+        
+        <!--
+    <script id="more.html" type="text/ng-template">
+      <ion-view title="More">
+        <ion-nav-buttons side="left">
+          <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
+        </ion-nav-buttons>        
+        <ion-content padding="true">
+          <h1 style="text-align: center;">More Page</h1>
+        </ion-content>
+      </ion-view>
+    </script>
+        -->
+    
+    <script id="about.html" type="text/ng-template">
+      <ion-view title="About">
+        <ion-nav-buttons side="left">
+          <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
+        </ion-nav-buttons>        
+        <ion-content padding="true">
+          <h1 style="text-align: center;">About Page</h1>
+        </ion-content>
+      </ion-view>
+    </script>    
+    
+    <script id="donate.html" type="text/ng-template">
+      <ion-view title="Donation">
+        <ion-nav-buttons side="left">
+          <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
+        </ion-nav-buttons>        
+        <ion-content padding="true">
+          <h1 style="text-align: center;">Donation Page</h1>
+        </ion-content>
+      </ion-view>
+    </script> 
+
+	</body>
+</html>

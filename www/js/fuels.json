@@ -1,0 +1,41 @@
+[
+    {
+        "id": 1,
+        "vehicle": {
+            "name": "Honda"
+        },
+        "date": 1432090170403,
+        "odometer": 23842,
+        "litres": 12,
+        "litrerate": 12,
+        "total": 12,
+        "fulltank": true,
+        "location": "AUckland"
+    },
+    {
+        "id": 2,
+        "vehicle": {
+            "name": "Honda"
+        },
+        "date": 1432090170403,
+        "odometer": 23942,
+        "litres": 12,
+        "litrerate": 12,
+        "total": 12,
+        "fulltank": false,
+        "location": "Auckland"
+    },
+    {
+        "id": 3,
+        "vehicle": {
+            "name": "Honda"
+        },
+        "date": 1432090170403,
+        "odometer": 23989,
+        "litres": 12,
+        "litrerate": 12,
+        "total": 12,
+        "fulltank": false,
+        "location": "Auckland"
+    }
+]

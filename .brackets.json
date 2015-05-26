@@ -1,0 +1,9 @@
+{
+    "jscodehints.detectedExclusions": [
+        "C:/MyAndroidApps/test2/gulpfile.js",
+        "C:/MyAndroidApps/test2/www/lib/ionic/js/ionic.min.js",
+        "C:/MyAndroidApps/test2/www/lib/ionic/js/ionic.js",
+        "C:/MyAndroidApps/test2/platforms/android/assets/www/lib/ionic/js/ionic.min.js",
+        "C:/MyAndroidApps/test2/www/lib/ionic/js/ionic.bundle.js"
+    ]
+}

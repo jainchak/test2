@@ -1,8 +1,25 @@
 var app = angular.module('myApp', ['ionic']);
 
-app.service('FuelsService', function($q) {
+app.factory('$localstorage', ['$window', function($window) {
   return {
-    fuels: [
+    set: function(key, value) {
+      $window.localStorage[key] = value;
+    },
+    get: function(key, defaultValue) {
+      return $window.localStorage[key] || defaultValue;
+    },
+    setObject: function(key, value) {
+      $window.localStorage[key] = JSON.stringify(value);
+    },
+    getObject: function(key) {
+      return JSON.parse($window.localStorage[key] || '{}');
+    }
+  }
+}]);
+
+
+app.run(function($localstorage) {
+  var fuels = [
       {
           id: 1,
           "vehicle": {
@@ -42,16 +59,23 @@ app.service('FuelsService', function($q) {
           "fulltank": false,
           "location": "Wellington"
       }
-    ],
+    ];
+
+  $localstorage.setObject('fuels', fuels);
+});
+
+app.service('FuelsService', function($q, $localstorage) {
+  return {
     getFuels: function() {
         console.log("In FuelsService.getFuels");
-      return this.fuels
+        return $localstorage.getObject('fuels')
     },
     getFuel: function(fuelId) {
-        console.log("In FuelsService.getFuel");
+      console.log("In FuelsService.getFuel");
+      var fuels = $localstorage.getObject('fuels');
       var dfd = $q.defer()
-      this.fuels.forEach(function(fuel) {
-          console.log("fuelId: "+fuelId + ", fuel.id = " + fuel.id);
+      fuels.forEach(function(fuel) {
+        console.log("fuelId: "+fuelId + ", fuel.id = " + fuel.id);
         if (fuel.id == fuelId) {
             console.log("fuel details resolved");
             dfd.resolve(fuel)
@@ -157,9 +181,6 @@ app.controller('FuelsController', function($scope, fuels) {
 app.controller('FuelController', function($scope, fuel) {
     console.log("In FuelController...");
     $scope.fuel = fuel;
-    //$http.get('js/fuels.json').success(function(data){
-    //    $scope.fuels = data;
-    //});
 });
 
 /*
@@ -169,9 +190,9 @@ app.controller('MoreController', function($scope, $ionicSideMenuDelegate) {
 */
 app.controller('AboutCtrl', function($scope, $ionicSideMenuDelegate) {
     console.log("In AboutController...");
-  $scope.openMenu = function () {
-    $ionicSideMenuDelegate.toggleLeft();
-  }
+    $scope.openMenu = function () {
+      $ionicSideMenuDelegate.toggleLeft();
+    }
 });
 
 app.controller('DonateCtrl', function($scope, $ionicSideMenuDelegate) {

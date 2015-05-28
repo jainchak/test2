@@ -28,6 +28,7 @@
             <ion-item href="#/" menu-close="">Home</ion-item>
             <ion-item href="#/about" menu-close="">About</ion-item>
             <ion-item href="#/donate" menu-close="">Donate</ion-item>
+            <ion-item href="#/addfuel" menu-close="">Add Fuel</ion-item>
           </ion-list>
         </ion-content>
       </ion-side-menu>
@@ -111,6 +112,61 @@
               Total $: {{fuel.total | currency}}<br/>
               Fulltank: {{fuel.fulltank}}<br/>
               Location: {{fuel.location}}
+        </ion-content>
+      </ion-view>
+    </script>        
+    
+    <script id="addfuel.html" type="text/ng-template">
+      <ion-view title="Add Fuel Details">
+        <ion-nav-buttons side="left">
+          <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
+        </ion-nav-buttons>        
+        <ion-content padding="true">
+          <div class="list">
+            <label class="item item-input">
+              <span class="input-label">Id:</span>
+              <input type="text" ng-model="fuel.id" placeholder="Id">
+            </label>
+            <label class="item item-input">
+              <span class="input-label">Vehicle name:</span>
+              <input type="text" ng-model="fuel.vehicle.name" placeholder="Vehicle name">
+            </label>
+            <label class="item item-input">
+              <span class="input-label">Date:</span>
+              <input type="date" ng-model="fuel.date" placeholder="Date">
+            </label>
+            <label class="item item-input">
+              <span class="input-label">Odometer:</span>
+              <input type="text" ng-model="fuel.odometer" placeholder="Odometer">
+            </label>
+            <label class="item item-input">
+              <span class="input-label">Litres:</span>
+              <input type="text" ng-model="fuel.litres" placeholder="Litres">
+            </label>
+            <label class="item item-input">
+              <span class="input-label">$/litre:</span>
+              <input type="text" ng-model="fuel.litrerate" placeholder="$/litre">
+            </label>
+            <label class="item item-input">
+              <span class="input-label">Total:</span>
+              <input type="text" ng-model="fuel.total" placeholder="Total">
+            </label>
+            <label class="item item-toggle">
+              <ion-toggle ng-model="fuel.fulltank" toggle-class="toggle-calm">Full Tank:</ion-toggle>
+            </label>
+            <label class="item item-input">
+              <span class="input-label">Location:</span>
+              <input type="text" ng-model="fuel.location" placeholder="Location">
+            </label>
+          </div>
+          <div class="padding">          
+            <button class="button button-stable" ng-click="reset()">
+              Reset
+            </button>
+            <button class="button button-stable" ng-click="save(fuel)">
+              Submit
+            </button>
+          </div>
         </ion-content>
       </ion-view>
     </script>        

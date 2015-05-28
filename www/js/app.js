@@ -17,79 +17,85 @@ app.factory('$localstorage', ['$window', function($window) {
     pushObjectToArray: function(key, element) {
       // retrieve array object as Json based on key
       var arrayobj = JSON.parse($window.localStorage[key] || '{}');
-      console.log('old array: ' + arrayobj);
+      console.log('old array: ' + JSON.stringify(arrayobj));
 
       // push new element at the end of json array
       arrayobj.push(element);
-      console.log('new array: ' + arrayobj);
+      console.log('new array: ' + JSON.stringify(arrayobj));
 
       // set object array back to localstorage
       $window.localStorage[key] = JSON.stringify(arrayobj);
+
+      // retrieve again and test
+      var testobj = JSON.parse($window.localStorage[key] || '{}');
+      console.log('test array: ' + JSON.stringify(testobj));      
     }
   }
 }]);
 
 
 app.run(function($localstorage) {
-  var fuels = [
-      {
-          id: 1,
-          "vehicle": {
-            "name": "Honda"
-          },
-          "date": 1432090170403,
-          "odometer": 23842,
-          "litres": 12,
-          "litrerate": 12,
-          "total": 12,
-          "fulltank": true,
-          "location": "Wellington"
-      },
-      {
-          id: 2,
-          "vehicle": {
-            "name": "Honda"
-          },
-          "date": 1432090170403,
-          "odometer": 23942,
-          "litres": 12,
-          "litrerate": 12,
-          "total": 12,
-          "fulltank": false,
-          "location": "Auckland"
-      },
-      {
-          id: 3,
-          "vehicle": {
-            "name": "Honda"
-          },
-          "date": 1432090170403,
-          "odometer": 23989,
-          "litres": 12,
-          "litrerate": 12,
-          "total": 12,
-          "fulltank": false,
-          "location": "Wellington"
-      }
-    ];
+//  reset localstorage
+//  $localstorage.setObject('fuels', []);
+//   var fuels = [
+//       {
+//           id: 1,
+//           "vehicle": {
+//             "name": "Honda"
+//           },
+//           "date": 1432090170403,
+//           "odometer": 23842,
+//           "litres": 12,
+//           "litrerate": 12,
+//           "total": 12,
+//           "fulltank": true,
+//           "location": "Wellington"
+//       },
+//       {
+//           id: 2,
+//           "vehicle": {
+//             "name": "Honda"
+//           },
+//           "date": 1432090170403,
+//           "odometer": 23942,
+//           "litres": 12,
+//           "litrerate": 12,
+//           "total": 12,
+//           "fulltank": false,
+//           "location": "Auckland"
+//       },
+//       {
+//           id: 3,
+//           "vehicle": {
+//             "name": "Honda"
+//           },
+//           "date": 1432090170403,
+//           "odometer": 23989,
+//           "litres": 12,
+//           "litrerate": 12,
+//           "total": 12,
+//           "fulltank": false,
+//           "location": "Wellington"
+//       }
+//     ];
 
-  $localstorage.setObject('fuels', fuels);
+//   $localstorage.setObject('fuels', fuels);
 
-  var fuel_element = {
-          id: 4,
-          "vehicle": {
-            "name": "Honda"
-          },
-          "date": 1432090170403,
-          "odometer": 65000,
-          "litres": 12,
-          "litrerate": 12,
-          "total": 12,
-          "fulltank": false,
-          "location": "Auckland"
-      };
+//   var fuel_element = {
+//           id: 4,
+//           "vehicle": {
+//             "name": "Honda"
+//           },
+//           "date": 1432090170403,
+//           "odometer": 65000,
+//           "litres": 12,
+//           "litrerate": 12,
+//           "total": 12,
+//           "fulltank": false,
+//           "location": "Auckland"
+//       };
 
-  $localstorage.pushObjectToArray('fuels', fuel_element);
+//   $localstorage.pushObjectToArray('fuels', fuel_element);
 
 });
 
@@ -97,7 +103,9 @@ app.service('FuelsService', function($q, $localstorage) {
   return {
     getFuels: function() {
         console.log("In FuelsService.getFuels");
-        return $localstorage.getObject('fuels')
+        var fuels = $localstorage.getObject('fuels');
+        console.log("fuels: " + JSON.stringify(fuels));
+        return fuels
     },
     getFuel: function(fuelId) {
       console.log("In FuelsService.getFuel");
@@ -112,7 +120,6 @@ app.service('FuelsService', function($q, $localstorage) {
       })
       return dfd.promise
     }
-
   }
 })
 
@@ -181,6 +188,11 @@ app.config(function($stateProvider, $urlRouterProvider) {
       url: '/donate',
       controller: 'DonateCtrl',
       templateUrl: 'donate.html'
+    })  
+   .state('addfuel', {
+      url: '/addfuel',
+      controller: 'AddFuelCtrl',
+      templateUrl: 'addfuel.html'
     })
   
   ;
@@ -210,6 +222,16 @@ app.controller('FuelsController', function($scope, fuels) {
 app.controller('FuelController', function($scope, fuel) {
     console.log("In FuelController...");
     $scope.fuel = fuel;
+});
+
+app.controller('AddFuelCtrl', function($scope, $ionicSideMenuDelegate, $localstorage) {
+    console.log("In AddFuelCtrl...");
+    $scope.openMenu = function () {
+      $ionicSideMenuDelegate.toggleLeft();
+    }
+    $scope.save = function(fuel) {
+      $localstorage.pushObjectToArray('fuels', fuel);
+    }
 });
 
 /*

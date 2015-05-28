@@ -13,6 +13,18 @@ app.factory('$localstorage', ['$window', function($window) {
     },
     getObject: function(key) {
       return JSON.parse($window.localStorage[key] || '{}');
+    },
+    pushObjectToArray: function(key, element) {
+      // retrieve array object as Json based on key
+      var arrayobj = JSON.parse($window.localStorage[key] || '{}');
+      console.log('old array: ' + arrayobj);
+
+      // push new element at the end of json array
+      arrayobj.push(element);
+      console.log('new array: ' + arrayobj);
+
+      // set object array back to localstorage
+      $window.localStorage[key] = JSON.stringify(arrayobj);
     }
   }
 }]);
@@ -62,6 +74,23 @@ app.run(function($localstorage) {
     ];
 
   $localstorage.setObject('fuels', fuels);
+
+  var fuel_element = {
+          id: 4,
+          "vehicle": {
+            "name": "Honda"
+          },
+          "date": 1432090170403,
+          "odometer": 65000,
+          "litres": 12,
+          "litrerate": 12,
+          "total": 12,
+          "fulltank": false,
+          "location": "Auckland"
+      };
+
+  $localstorage.pushObjectToArray('fuels', fuel_element);
+
 });
 
 app.service('FuelsService', function($q, $localstorage) {

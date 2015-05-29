@@ -28,7 +28,8 @@ app.factory('$localstorage', ['$window', function($window) {
 
       // retrieve again and test
       var testobj = JSON.parse($window.localStorage[key] || '{}');
-      console.log('test array: ' + JSON.stringify(testobj));      
+      //console.log('test array: ' + JSON.stringify(testobj));      
+      console.log('\ntest array: ');      
     },
     updateObjectToArray: function(key, element, elementId) {
       console.log('In updateObjectToArray');
@@ -37,9 +38,18 @@ app.factory('$localstorage', ['$window', function($window) {
       console.log('old array: ' + JSON.stringify(arrayobj));
 
       // update element at position elementId in arrayobj
-      console.log("elementId: " + elementId);
-      console.log("element at position " + elementId-1 + ": " + JSON.stringify(arrayobj[elementId - 1]));
-      arrayobj[elementId-1] = element;
+      console.log("elementId to replace: " + elementId);
+      //console.log("element at position " + elementId-1 + ": " + JSON.stringify(arrayobj[elementId - 1]));
+      //arrayobj[elementId-1] = element;
+
+      for (var i in arrayobj) {
+        //console.log("\nfuel[" + i + "] = " + JSON.stringify(arrayobj[i]));
+        if(arrayobj[i].id == elementId) {
+          console.log("old element to be replaced: " + JSON.stringify(arrayobj[i]));
+          console.log("new element to replace: " + JSON.stringify(element));
+          arrayobj[i] = element;
+        }
+      };
 
       // set object array back to localstorage
       $window.localStorage[key] = JSON.stringify(arrayobj);
@@ -54,7 +64,7 @@ app.factory('$localstorage', ['$window', function($window) {
 
 app.run(function($localstorage) {
  // reset localstorage
- $localstorage.setObject('fuels', []);
+ // $localstorage.setObject('fuels', []);
 //   var fuels = [
 //       {
 //           id: 1,
@@ -229,9 +239,17 @@ app.controller('StatisticsTabCtrl', function($scope, $ionicSideMenuDelegate) {
     console.log("In StatisticsController...");
 });
 
-app.controller('FuelsController', function($scope, fuels) {
+app.controller('FuelsController', function($scope, fuels, $localstorage) {
     console.log("In FuelsController...");
+    $scope.refreshing = false;
+
     $scope.fuels = fuels;
+
+    $scope.doRefresh = function() {
+      console.log('Refreshing !!');
+      $scope.fuels = $localstorage.getObject('fuels');
+      $scope.$broadcast('scroll.refreshComplete');      
+    };
     //$http.get('js/fuels.json').success(function(data){
     //    $scope.fuels = data;
     //});
@@ -243,7 +261,9 @@ app.controller('EditFuelController', function($scope, fuel, $localstorage, $stat
 
     $scope.save = function(fuel) {
       $localstorage.updateObjectToArray('fuels', fuel, fuel.id);
-      console.log("fuel details updated to fuels.. transfering page to tabs.fuels")
+      console.log("fuel details updated to fuels.. transfering page to tabs.fuels");
+      $scope.fuel = [];
+      $scope.fuels = $localstorage.getObject('fuels');
       $state.go('tabs.fuels');
     }
 
@@ -251,12 +271,15 @@ app.controller('EditFuelController', function($scope, fuel, $localstorage, $stat
 
 app.controller('AddFuelController', function($scope, $ionicSideMenuDelegate, $localstorage, $state) {
     console.log("In AddFuelController...");
+    $scope.fuel = [];
     $scope.openMenu = function () {
       $ionicSideMenuDelegate.toggleLeft();
     }
     $scope.save = function(fuel) {
       $localstorage.pushObjectToArray('fuels', fuel);
       console.log("fuel details added to fuels.. transfering page to tabs.fuels")
+      $scope.fuel = [];
+      $scope.fuels = $localstorage.getObject('fuels');
       $state.go('tabs.fuels');
     }
     

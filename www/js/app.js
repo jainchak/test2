@@ -29,14 +29,32 @@ app.factory('$localstorage', ['$window', function($window) {
       // retrieve again and test
       var testobj = JSON.parse($window.localStorage[key] || '{}');
       console.log('test array: ' + JSON.stringify(testobj));      
+    },
+    updateObjectToArray: function(key, element, elementId) {
+      console.log('In updateObjectToArray');
+      // retrieve array object as Json based on key
+      var arrayobj = JSON.parse($window.localStorage[key] || '{}');
+      console.log('old array: ' + JSON.stringify(arrayobj));
+
+      // update element at position elementId in arrayobj
+      console.log("elementId: " + elementId);
+      console.log("element at position " + elementId-1 + ": " + JSON.stringify(arrayobj[elementId - 1]));
+      arrayobj[elementId-1] = element;
+
+      // set object array back to localstorage
+      $window.localStorage[key] = JSON.stringify(arrayobj);
+
+      // retrieve again and test
+      var testobj = JSON.parse($window.localStorage[key] || '{}');
+      console.log('test array: ' + JSON.stringify(testobj));
     }
   }
 }]);
 
 
 app.run(function($localstorage) {
-//  reset localstorage
-//  $localstorage.setObject('fuels', []);
+ // reset localstorage
+ $localstorage.setObject('fuels', []);
 //   var fuels = [
 //       {
 //           id: 1,
@@ -158,8 +176,8 @@ app.config(function($stateProvider, $urlRouterProvider) {
       url: '/fuels/:fuelId',
       views: {
         'fuels-tab': {
-          templateUrl: 'fuel.html',
-          controller: 'FuelController',
+          templateUrl: 'editfuel.html',
+          controller: 'EditFuelController',
           resolve: {
             fuel: function($stateParams, FuelsService) {
                 return FuelsService.getFuel($stateParams.fuelId)
@@ -181,17 +199,17 @@ app.config(function($stateProvider, $urlRouterProvider) {
     */
    .state('about', {
       url: '/about',
-      controller: 'AboutCtrl',
+      controller: 'AboutController',
       templateUrl: 'about.html'
     })  
    .state('donate', {
       url: '/donate',
-      controller: 'DonateCtrl',
+      controller: 'DonateController',
       templateUrl: 'donate.html'
     })  
    .state('addfuel', {
       url: '/addfuel',
-      controller: 'AddFuelCtrl',
+      controller: 'AddFuelController',
       templateUrl: 'addfuel.html'
     })
   
@@ -219,19 +237,29 @@ app.controller('FuelsController', function($scope, fuels) {
     //});
 });
 
-app.controller('FuelController', function($scope, fuel) {
-    console.log("In FuelController...");
+app.controller('EditFuelController', function($scope, fuel, $localstorage, $state) {
+    console.log("In EditFuelController...");
     $scope.fuel = fuel;
+
+    $scope.save = function(fuel) {
+      $localstorage.updateObjectToArray('fuels', fuel, fuel.id);
+      console.log("fuel details updated to fuels.. transfering page to tabs.fuels")
+      $state.go('tabs.fuels');
+    }
+
 });
 
-app.controller('AddFuelCtrl', function($scope, $ionicSideMenuDelegate, $localstorage) {
-    console.log("In AddFuelCtrl...");
+app.controller('AddFuelController', function($scope, $ionicSideMenuDelegate, $localstorage, $state) {
+    console.log("In AddFuelController...");
     $scope.openMenu = function () {
       $ionicSideMenuDelegate.toggleLeft();
     }
     $scope.save = function(fuel) {
       $localstorage.pushObjectToArray('fuels', fuel);
+      console.log("fuel details added to fuels.. transfering page to tabs.fuels")
+      $state.go('tabs.fuels');
     }
+    
 });
 
 /*
@@ -239,14 +267,14 @@ app.controller('MoreController', function($scope, $ionicSideMenuDelegate) {
 
 });
 */
-app.controller('AboutCtrl', function($scope, $ionicSideMenuDelegate) {
+app.controller('AboutController', function($scope, $ionicSideMenuDelegate) {
     console.log("In AboutController...");
     $scope.openMenu = function () {
       $ionicSideMenuDelegate.toggleLeft();
     }
 });
 
-app.controller('DonateCtrl', function($scope, $ionicSideMenuDelegate) {
+app.controller('DonateController', function($scope, $ionicSideMenuDelegate) {
     console.log("In DonateController...");
   $scope.openMenu = function () {
     $ionicSideMenuDelegate.toggleLeft();

@@ -28,7 +28,6 @@
             <ion-item href="#/" menu-close="">Home</ion-item>
             <ion-item href="#/about" menu-close="">About</ion-item>
             <ion-item href="#/donate" menu-close="">Donate</ion-item>
-            <ion-item href="#/addfuel" menu-close="">Add Fuel</ion-item>
           </ion-list>
         </ion-content>
       </ion-side-menu>
@@ -77,6 +76,9 @@
       <ion-view title="Fuels">
         <ion-nav-buttons side="left">
           <button class="button button-icon button-clear ion-navicon" ng-click="openMenu()"></button>
+        </ion-nav-buttons>      
+        <ion-nav-buttons side="right">
+		  <a href="#/tab/addfuel"" class="button button-clear icon ion-plus-round"></a>
         </ion-nav-buttons>         
         <ion-content padding="true">
           <ion-refresher pulling-text="Pull to refresh..." on-refresh="doRefresh()"></ion-refresher>

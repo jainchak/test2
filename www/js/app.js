@@ -59,6 +59,34 @@ app.factory('mylocalstorageservice', ['$window', function($window) {
       // retrieve again and test
       var testobj = JSON.parse($window.localStorage[key] || '{}');
       console.log('test array: ' + JSON.stringify(testobj));
+    },
+    removeObjectFromArray: function(key, elementId) {
+      console.log('In removeObjectFromArray');
+      // retrieve array object as Json based on key
+      var arrayobj = JSON.parse($window.localStorage[key] || '{}');
+      console.log('old array: ' + JSON.stringify(arrayobj));
+
+      // remove element at position elementId in arrayobj
+      console.log("elementId to replace: " + elementId);
+      //console.log("element at position " + elementId-1 + ": " + JSON.stringify(arrayobj[elementId - 1]));
+      //arrayobj[elementId-1] = element;
+
+      //temporary array to hold new values
+      var tempobj = [];
+
+      for (var i in arrayobj) {
+        //console.log("\nfuel[" + i + "] = " + JSON.stringify(arrayobj[i]));
+        if(arrayobj[i].id != elementId) {
+          tempobj.push(arrayobj[i]);
+        }
+      };
+
+      // set object array back to localstorage
+      $window.localStorage[key] = JSON.stringify(tempobj);
+
+      // retrieve again and test
+      var testobj = JSON.parse($window.localStorage[key] || '{}');
+      console.log('test array: ' + JSON.stringify(testobj));
     }
   }
 }]);
@@ -253,8 +281,7 @@ app.controller('StatisticsTabCtrl', function($scope, $ionicSideMenuDelegate) {
 app.controller('FuelsController', function($scope, fuels, mylocalstorageservice) {
     console.log("In FuelsController...");
     $scope.refreshing = false;
-
-    $scope.fuels = fuels;
+    $scope.fuels = mylocalstorageservice.getObject('fuels');
 
     $scope.doRefresh = function() {
       console.log('Refreshing !!');

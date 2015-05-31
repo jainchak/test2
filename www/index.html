@@ -84,15 +84,26 @@
           <ion-refresher pulling-text="Pull to refresh..." on-refresh="doRefresh()"></ion-refresher>
           <ion-list>
             <ion-item ng-repeat="fuel in fuels" href="#/tab/fuels/{{fuel.id}}" class="item item-avatar">
-              id: {{fuel.id}}<br/>
-              vehicle name: {{fuel.vehicle.name}}<br/>
-              Date: {{fuel.date | date}}<br/>
-              Odometer Reading: {{fuel.odometer}}<br/>
-              Litres: {{fuel.litres}}<br/>
-              $/litre: {{fuel.litrerate | currency}}<br/>
-              Total $: {{fuel.total | currency}}<br/>
-              Fulltank: {{fuel.fulltank}}<br/>
-              Location: {{fuel.location}}
+              <div class="row">
+                <div class="col">{{fuel.id}}</div>
+                <div class="col"></div>
+                <div class="col">{{fuel.vehicle.name}}</div>
+              </div>
+              <div class="row">
+                <div class="col"><h2>{{fuel.date | date:'dd/MM/yyyy'}}</h2></div>
+                <div class="col"><h3>{{fuel.fulltank}}</h3></div>
+                <div class="col"><h3>{{fuel.location}}</h3></div>
+              </div>
+              <div class="row">
+                <div class="col"><h4>km trip</h4></div>
+                <div class="col"></div>
+                <div class="col"><h4>{{fuel.litrerate | currency}}</h4></div>
+              </div>
+              <div class="row">
+                <div class="col"><h4>{{fuel.odometer}}</h4></div>
+                <div class="col"><h4>{{fuel.litres}}</h4></div>
+                <div class="col"><h4>{{fuel.total | currency}}</h4></div>
+              </div>
             </ion-item>
           </ion-list>
         </ion-content>
@@ -108,7 +119,7 @@
           <h1 style="text-align: center;">Fuel Details</h1>
             id: {{fuel.id}}<br/>
               vehicle name: {{fuel.vehicle.name}}<br/>
-              Date: {{fuel.date | date}}<br/>
+              Date: {{fuel.date | date:'medium'}}<br/>
               Odometer Reading: {{fuel.odometer}}<br/>
               Litres: {{fuel.litres}}<br/>
               $/litre: {{fuel.litrerate | currency}}<br/>

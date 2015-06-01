@@ -210,12 +210,12 @@ app.config(function($stateProvider, $urlRouterProvider) {
       views: {
         'fuels-tab': {
           templateUrl: 'fuels.html',
-          controller: 'FuelsController',
-          resolve: {
-            fuels: function(FuelsService) {
-                return FuelsService.getFuels()
-            }
-          }
+          controller: 'FuelsController'//,
+          // resolve: {
+          //   fuels: function(FuelsService) {
+          //       return FuelsService.getFuels()
+          //   }
+          // }
         }
       }
     }) 
@@ -287,7 +287,7 @@ app.controller('StatisticsTabCtrl', function($scope, $ionicSideMenuDelegate) {
     console.log("In StatisticsController...");
 });
 
-app.controller('FuelsController', function($scope, fuels, mylocalstorageservice, $state) {
+app.controller('FuelsController', function($scope, mylocalstorageservice, $state, $interval) {
     console.log("In FuelsController...");
     
     //$scope.shouldShowDelete = false;
@@ -316,6 +316,21 @@ app.controller('FuelsController', function($scope, fuels, mylocalstorageservice,
       $scope.fuels = mylocalstorageservice.getObject('fuels');
       $scope.$broadcast('scroll.refreshComplete');  
     };
+
+  /*
+    // auto refresh after certain interval
+    var autoRefresh = function() {
+      console.log('Refreshing !!');
+      $scope.fuels = mylocalstorageservice.getObject('fuels');
+      $scope.$broadcast('scroll.refreshComplete');
+    };
+
+    $interval( function() {
+      console.log("auto refreshing !!!");
+      autoRefresh();
+    }, 5000);
+  */
+
     //$http.get('js/fuels.json').success(function(data){
     //    $scope.fuels = data;
     //});
@@ -328,8 +343,8 @@ app.controller('EditFuelController', function($scope, fuel, mylocalstorageservic
     $scope.save = function(fuel) {
       mylocalstorageservice.updateObjectToArray('fuels', fuel, fuel.id);
       console.log("fuel details updated to fuels.. transfering page to tabs.fuels");
-      $scope.fuel = [];
-      $scope.fuels = mylocalstorageservice.getObject('fuels');
+      //$scope.fuel = [];
+      //$scope.fuels = mylocalstorageservice.getObject('fuels');
       $state.go('tabs.fuels');
     }
 
@@ -345,8 +360,8 @@ app.controller('AddFuelController', function($scope, $ionicSideMenuDelegate, myl
 	  console.log("save called for: " + JSON.stringify(fuel));
       mylocalstorageservice.pushObjectToArray('fuels', fuel);
       console.log("fuel details added to fuels.. transfering page to tabs.fuels")
-      $scope.fuel = [];
-      $scope.fuels = mylocalstorageservice.getObject('fuels');
+      //$scope.fuel = [];
+      //$scope.fuels = mylocalstorageservice.getObject('fuels');
       $state.go('tabs.fuels');
     }
     

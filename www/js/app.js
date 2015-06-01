@@ -16,10 +16,17 @@ app.factory('mylocalstorageservice', ['$window', function($window) {
     },
     pushObjectToArray: function(key, element) {
 		
+
 	    console.log("array to be added : " + JSON.stringify(element));
       // retrieve array object as Json based on key
       var arrayobj = JSON.parse($window.localStorage[key] || '{}');
       console.log('old array: ' + JSON.stringify(arrayobj));
+
+      // initialize the collection if not already exist
+      if("{}" == JSON.stringify(arrayobj)) {
+        console.log('initialize object array');
+        arrayobj = [];
+      }
 
       // push new element at the end of json array
       arrayobj.push(element);
@@ -212,7 +219,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
         }
       }
     }) 
-    .state('tabs.fuel', {
+    .state('tabs.editfuel', {
       url: '/fuels/:fuelId',
       views: {
         'fuels-tab': {
@@ -220,6 +227,8 @@ app.config(function($stateProvider, $urlRouterProvider) {
           controller: 'EditFuelController',
           resolve: {
             fuel: function($stateParams, FuelsService) {
+                console.log("inside tabs.fuel ");
+                console.log("fuel.id = " + $stateParams.fuelId);
                 return FuelsService.getFuel($stateParams.fuelId)
             }
           }
@@ -278,15 +287,34 @@ app.controller('StatisticsTabCtrl', function($scope, $ionicSideMenuDelegate) {
     console.log("In StatisticsController...");
 });
 
-app.controller('FuelsController', function($scope, fuels, mylocalstorageservice) {
+app.controller('FuelsController', function($scope, fuels, mylocalstorageservice, $state) {
     console.log("In FuelsController...");
+    
+    //$scope.shouldShowDelete = false;
+    $scope.listCanSwipe = true;
     $scope.refreshing = false;
+
     $scope.fuels = mylocalstorageservice.getObject('fuels');
 
     $scope.doRefresh = function() {
       console.log('Refreshing !!');
       $scope.fuels = mylocalstorageservice.getObject('fuels');
       $scope.$broadcast('scroll.refreshComplete');      
+    };
+
+    $scope.edit = function(fuel) {
+      console.log('inside FuelsController.edit function' + JSON.stringify(fuel));
+      $scope.fuel = fuel;
+      $state.go('tabs.editfuel', {'fuelId': fuel.id});
+    };
+
+    $scope.delete = function(fuel) {
+      console.log('inside FuelsController.delete function' + JSON.stringify(fuel));
+      //$scope.fuel = fuel;
+      //$state.go('tabs.editfuel', {'fuelId': fuel.id});
+      mylocalstorageservice.removeObjectFromArray('fuels', fuel.id);
+      $scope.fuels = mylocalstorageservice.getObject('fuels');
+      $scope.$broadcast('scroll.refreshComplete');  
     };
     //$http.get('js/fuels.json').success(function(data){
     //    $scope.fuels = data;

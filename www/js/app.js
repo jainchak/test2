@@ -261,7 +261,7 @@ app.controller('StatisticsTabCtrl', function($scope, $ionicSideMenuDelegate) {
     console.log("In StatisticsController...");
 });
 
-app.controller('FuelsController', function($scope, mylocalstorageservice, $state, $interval) {
+app.controller('FuelsController', function($scope, mylocalstorageservice, $state, $interval, $ionicActionSheet, $ionicListDelegate) {
     console.log("In FuelsController...");
     
     //$scope.shouldShowDelete = false;
@@ -282,13 +282,28 @@ app.controller('FuelsController', function($scope, mylocalstorageservice, $state
       $state.go('tabs.editfuel', {'fuelId': fuel.id});
     };
 
-    $scope.delete = function(fuel) {
-      console.log('inside FuelsController.delete function' + JSON.stringify(fuel));
-      //$scope.fuel = fuel;
-      //$state.go('tabs.editfuel', {'fuelId': fuel.id});
-      mylocalstorageservice.removeObjectFromArray('fuels', fuel.id);
-      $scope.fuels = mylocalstorageservice.getObject('fuels');
-      $scope.$broadcast('scroll.refreshComplete');  
+    $scope.confirmDelete = function(fuelId) {
+      // show ionic actionSheet to confirm delete operation
+      // show() returns a function to hide the actionSheet
+      var hideSheet = $ionicActionSheet.show({
+        titleText: 'Are you sure that you\'d like to delete this fuel?',
+        cancelText: 'Cancel',
+        destructiveText: 'Delete',
+        cancel: function () {
+          // if the user cancel's deletion, hide the list item's delete button
+          $ionicListDelegate.closeOptionButtons();
+        },
+        destructiveButtonClicked: function () {
+          // delete expense by its id property            
+          // $scope.expenses = ExpenseSvc.deleteExpense(expenseId);
+          mylocalstorageservice.removeObjectFromArray('fuels', fuelId);
+          $scope.fuels = mylocalstorageservice.getObject('fuels');
+          $scope.$broadcast('scroll.refreshComplete');  
+
+          // hide the confirmation dialog
+          hideSheet();
+        }
+      });      
     };
 
   /*

@@ -25,23 +25,6 @@ app.factory('mylocalstorageservice', ['$window', function($window) {
       console.log("nextId: " + nextId);
       return nextId;
     },
-    getPreviousOdometer: function(key) {
-      var arrayobj = JSON.parse($window.localStorage[key] || '{}');
-      // initialize the collection if not already exist
-      if("{}" == JSON.stringify(arrayobj)) {
-        arrayobj = [];
-      }
-      var arraylength = arrayobj.length;
-      console.log("array length = " + arraylength);
-
-      var previousOdometer = 0;
-      if(arraylength > 0) {
-        previousOdometer = arrayobj[arraylength-1].odometer;
-      }
-
-      console.log("previousOdometer = " + previousOdometer);
-      return previousOdometer;
-    },
     pushObjectToArray: function(key, element) {		
 
 	    console.log("array to be added : " + JSON.stringify(element));
@@ -64,7 +47,8 @@ app.factory('mylocalstorageservice', ['$window', function($window) {
 
       // retrieve again and test
       var testobj = JSON.parse($window.localStorage[key] || '{}');
-      console.log('test array: ' + JSON.stringify(testobj));
+      //console.log('test array: ' + JSON.stringify(testobj));      
+      console.log('\ntest array: ');      
     },
     updateObjectToArray: function(key, element, elementId) {
       console.log('In updateObjectToArray');
@@ -74,6 +58,8 @@ app.factory('mylocalstorageservice', ['$window', function($window) {
 
       // update element at position elementId in arrayobj
       console.log("elementId to replace: " + elementId);
+      //console.log("element at position " + elementId-1 + ": " + JSON.stringify(arrayobj[elementId - 1]));
+      //arrayobj[elementId-1] = element;
 
       for (var i in arrayobj) {
         //console.log("\nfuel[" + i + "] = " + JSON.stringify(arrayobj[i]));
@@ -99,6 +85,8 @@ app.factory('mylocalstorageservice', ['$window', function($window) {
 
       // remove element at position elementId in arrayobj
       console.log("elementId to replace: " + elementId);
+      //console.log("element at position " + elementId-1 + ": " + JSON.stringify(arrayobj[elementId - 1]));
+      //arrayobj[elementId-1] = element;
 
       //temporary array to hold new values
       var tempobj = [];
@@ -124,6 +112,49 @@ app.factory('mylocalstorageservice', ['$window', function($window) {
 app.run(function(mylocalstorageservice) {
  // reset localstorage
  // mylocalstorageservice.setObject('fuels', []);
+   // var fuels = [
+   //     {
+   //         id: 1,
+   //         "vehicle": {
+   //           "name": "Honda"
+   //         },
+   //         "date": 1432090170403,
+   //         "odometer": 23842,
+   //         "litres": 12,
+   //         "litrerate": 12,
+   //         "total": 12,
+   //         "fulltank": true,
+   //         "location": "Wellington"
+   //     },
+   //     {
+   //         id: 2,
+   //         "vehicle": {
+   //           "name": "Honda"
+   //         },
+   //         "date": 1432090170403,
+   //         "odometer": 23942,
+   //         "litres": 12,
+   //         "litrerate": 12,
+   //         "total": 12,
+   //         "fulltank": false,
+   //         "location": "Auckland"
+   //     },
+   //     {
+   //         id: 3,
+   //         "vehicle": {
+   //           "name": "Honda"
+   //         },
+   //         "date": 1432090170403,
+   //         "odometer": 23989,
+   //         "litres": 12,
+   //         "litrerate": 12,
+   //         "total": 12,
+   //         "fulltank": false,
+   //         "location": "Wellington"
+   //     }
+   //   ];
+
+   // mylocalstorageservice.setObject('fuels', fuels);
 
   // var fuel_element = {
   //         id: 4,
@@ -189,7 +220,12 @@ app.config(function($stateProvider, $urlRouterProvider) {
       views: {
         'fuels-tab': {
           templateUrl: 'fuels.html',
-          controller: 'FuelsController'
+          controller: 'FuelsController'//,
+          // resolve: {
+          //   fuels: function(FuelsService) {
+          //       return FuelsService.getFuels()
+          //   }
+          // }
         }
       }
     }) 
@@ -337,17 +373,12 @@ app.controller('AddFuelController', function($scope, $ionicSideMenuDelegate, myl
     $scope.fuel.date = new Date();
     $scope.fuel.vehicle = {};
     $scope.fuel.vehicle.name = "Honda";
-    $scope.fuel.previousOdometer = mylocalstorageservice.getPreviousOdometer('fuels');
 
     $scope.openMenu = function () {
       $ionicSideMenuDelegate.toggleLeft();
     }
     $scope.save = function(fuel) {
-      // calculate tripkm
-      fuel.tripkm = parseInt(fuel.odometer) - parseInt(fuel.previousOdometer);
-      
       console.log("save called for: " + fuel);
-      
       mylocalstorageservice.pushObjectToArray('fuels', fuel);
       console.log("fuel details added to fuels.. transfering page to tabs.fuels")
       //$scope.fuel = [];

@@ -14,8 +14,18 @@ app.factory('mylocalstorageservice', ['$window', function($window) {
     getObject: function(key) {
       return JSON.parse($window.localStorage[key] || '{}');
     },
-    pushObjectToArray: function(key, element) {
-		
+    getNextId: function(key) {
+      var arrayobj = JSON.parse($window.localStorage[key] || '{}');
+      var maxId = Math.max.apply(null,arrayobj.map(function(o){ return o.id; }));
+      var nextId = parseInt(maxId) + 1;
+      if(isNaN(nextId)) {
+        nextId = 1;
+      }
+      console.log("maxId: " + maxId);
+      console.log("nextId: " + nextId);
+      return nextId;
+    },
+    pushObjectToArray: function(key, element) {		
 
 	    console.log("array to be added : " + JSON.stringify(element));
       // retrieve array object as Json based on key
@@ -146,21 +156,21 @@ app.run(function(mylocalstorageservice) {
 
    // mylocalstorageservice.setObject('fuels', fuels);
 
-//   var fuel_element = {
-//           id: 4,
-//           "vehicle": {
-//             "name": "Honda"
-//           },
-//           "date": 1432090170403,
-//           "odometer": 65000,
-//           "litres": 12,
-//           "litrerate": 12,
-//           "total": 12,
-//           "fulltank": false,
-//           "location": "Auckland"
-//       };
+  // var fuel_element = {
+  //         id: 4,
+  //         "vehicle": {
+  //           "name": "Honda"
+  //         },
+  //         "date": 2013-09-08,
+  //         "odometer": 65000,
+  //         "litres": 12,
+  //         "litrerate": 12,
+  //         "total": 12,
+  //         "fulltank": false,
+  //         "location": "Auckland"
+  //     };
 
-//   mylocalstorageservice.pushObjectToArray('fuels', fuel_element);
+  // mylocalstorageservice.pushObjectToArray('fuels', fuel_element);
 
 });
 
@@ -338,7 +348,11 @@ app.controller('FuelsController', function($scope, mylocalstorageservice, $state
 
 app.controller('EditFuelController', function($scope, fuel, mylocalstorageservice, $state) {
     console.log("In EditFuelController...");
+    // set fuel to scope
     $scope.fuel = fuel;
+
+    // set date formatter
+    $scope.fuel.date = new Date(fuel.date);
 
     $scope.save = function(fuel) {
       mylocalstorageservice.updateObjectToArray('fuels', fuel, fuel.id);
@@ -352,12 +366,19 @@ app.controller('EditFuelController', function($scope, fuel, mylocalstorageservic
 
 app.controller('AddFuelController', function($scope, $ionicSideMenuDelegate, mylocalstorageservice, $state) {
     console.log("In AddFuelController...");
-    //$scope.fuel = [];
+
+    // set default values
+    $scope.fuel = {};
+    $scope.fuel.id = mylocalstorageservice.getNextId('fuels');
+    $scope.fuel.date = new Date();
+    $scope.fuel.vehicle = {};
+    $scope.fuel.vehicle.name = "Honda";
+
     $scope.openMenu = function () {
       $ionicSideMenuDelegate.toggleLeft();
     }
     $scope.save = function(fuel) {
-	  console.log("save called for: " + JSON.stringify(fuel));
+      console.log("save called for: " + fuel);
       mylocalstorageservice.pushObjectToArray('fuels', fuel);
       console.log("fuel details added to fuels.. transfering page to tabs.fuels")
       //$scope.fuel = [];

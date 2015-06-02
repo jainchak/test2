@@ -135,11 +135,63 @@
     </script>      
 
     <script type="text/javascript">
-      function submitform()
+      function submitaddform()
       {
-        document.fuelform.submit();
+        document.addfuelform.submit();
       }
-    </script>         
+    </script>   
+    
+    <script id="addfuel.html" type="text/ng-template">
+      <ion-view title="Add Fuel Details">
+        <ion-nav-buttons side="right">
+          <button type="submit" class="button button-clear button-icon ion-android-done" on-click="javascript: submitaddform()"></button>            
+        </ion-nav-buttons>          
+        <ion-content padding="true">
+          <form name="addfuelform" novalidate="novalidate" on-valid-submit="save(fuel)">
+            <div class="list">
+              <label class="item item-input" validated>
+                <span class="input-label">Vehicle name:</span>
+                <input type="text" ng-model="fuel.vehicle.name" placeholder="Vehicle name">
+                <i class="icon ion-alert-circled error col col-10"></i>
+              </label>
+              <label class="item item-input" validated>
+                <span class="input-label" >Date:</span>
+                <input type="date" ng-model="fuel.date" required="required" >
+                <i class="icon ion-alert-circled error col col-10"></i>
+              </label>
+              <label class="item item-input" validated>
+                <span class="input-label">Odometer:</span>
+                <input type="number" ng-model="fuel.odometer" placeholder="Odometer" required="required" >
+                <i class="icon ion-alert-circled error col col-10"></i>
+              </label>
+              <label class="item item-input" validated>
+                <span class="input-label">Litres:</span>
+                <input type="number" ng-model="fuel.litres" ng-change="changelitres()" placeholder="Litres" required="required" >
+                <i class="icon ion-alert-circled error col col-10"></i>
+              </label>
+              <label class="item item-input" validated>
+                <span class="input-label">$/litre:</span>
+                <input type="number" ng-model="fuel.litrerate" ng-change="changerate()" placeholder="$/litre" required="required" >
+                <i class="icon ion-alert-circled error col col-10"></i>
+              </label>
+              <label class="item item-input" validated>
+                <span class="input-label">Total:</span>
+                <input type="number" ng-model="fuel.total" ng-change="changetotal()" placeholder="Total" required="required" >
+                <i class="icon ion-alert-circled error col col-10"></i>
+              </label>
+              <label class="item item-toggle">
+                <ion-toggle ng-model="fuel.fulltank" toggle-class="toggle-calm">Full Tank:</ion-toggle>
+              </label>
+              <label class="item item-input" validated>
+                <span class="input-label">Location:</span>
+                <input type="text" ng-model="fuel.location" placeholder="Location" required="required" >
+                <i class="icon ion-alert-circled error col col-10"></i>
+              </label>
+            </div>
+          </form>
+        </ion-content>
+      </ion-view>
+    </script>             
     
     <script id="editfuel.html" type="text/ng-template">
       <ion-view title="Edit Fuel Details">
@@ -191,59 +243,7 @@
           </form>
         </ion-content>
       </ion-view>
-    </script>
-    
-    <script id="addfuel.html" type="text/ng-template">
-      <ion-view title="Add Fuel Details">
-        <ion-nav-buttons side="right">
-          <button type="submit" class="button button-clear button-icon ion-android-done" on-click="javascript: submitform()"></button>            
-        </ion-nav-buttons>          
-        <ion-content padding="true">
-          <form name="fuelform" novalidate="novalidate" on-valid-submit="save(fuel)">
-            <div class="list">
-              <label class="item item-input" validated>
-                <span class="input-label">Vehicle name:</span>
-                <input type="text" ng-model="fuel.vehicle.name" placeholder="Vehicle name">
-                <i class="icon ion-alert-circled error col col-10"></i>
-              </label>
-              <label class="item item-input" validated>
-                <span class="input-label" >Date:</span>
-                <input type="date" ng-model="fuel.date" required="required" >
-                <i class="icon ion-alert-circled error col col-10"></i>
-              </label>
-              <label class="item item-input" validated>
-                <span class="input-label">Odometer:</span>
-                <input type="number" ng-model="fuel.odometer" placeholder="Odometer" required="required" >
-                <i class="icon ion-alert-circled error col col-10"></i>
-              </label>
-              <label class="item item-input" validated>
-                <span class="input-label">Litres:</span>
-                <input type="number" ng-model="fuel.litres" placeholder="Litres" required="required" >
-                <i class="icon ion-alert-circled error col col-10"></i>
-              </label>
-              <label class="item item-input" validated>
-                <span class="input-label">$/litre:</span>
-                <input type="number" ng-model="fuel.litrerate" placeholder="$/litre" required="required" >
-                <i class="icon ion-alert-circled error col col-10"></i>
-              </label>
-              <label class="item item-input" validated>
-                <span class="input-label">Total:</span>
-                <input type="number" ng-model="fuel.total" placeholder="Total" required="required" >
-                <i class="icon ion-alert-circled error col col-10"></i>
-              </label>
-              <label class="item item-toggle">
-                <ion-toggle ng-model="fuel.fulltank" toggle-class="toggle-calm">Full Tank:</ion-toggle>
-              </label>
-              <label class="item item-input" validated>
-                <span class="input-label">Location:</span>
-                <input type="text" ng-model="fuel.location" placeholder="Location" required="required" >
-                <i class="icon ion-alert-circled error col col-10"></i>
-              </label>
-            </div>
-          </form>
-        </ion-content>
-      </ion-view>
-    </script>        
+    </script> 
         
         <!--
     <script id="more.html" type="text/ng-template">

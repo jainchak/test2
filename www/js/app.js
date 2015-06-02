@@ -97,6 +97,23 @@ app.factory('mylocalstorageservice', ['$window', function($window) {
       console.log("previousOdometer = " + previousOdometer);
       return previousOdometer;
     },
+    getPreviousFuelRate: function(key) {
+      var arrayobj = JSON.parse($window.localStorage[key] || '{}');
+      // initialize the collection if not already exist
+      if("{}" == JSON.stringify(arrayobj)) {
+        arrayobj = [];
+      }
+      var arraylength = arrayobj.length;
+      console.log("array length = " + arraylength);
+
+      var previousFuelRate = 0;
+      if(arraylength > 0) {
+        previousFuelRate = arrayobj[arraylength-1].litrerate;
+      }
+
+      console.log("previousFuelRate = " + previousFuelRate);
+      return previousFuelRate;
+    },
     pushObjectToArray: function(key, element) {		
 
 	    console.log("array to be added : " + JSON.stringify(element));
@@ -408,11 +425,13 @@ app.controller('AddFuelController', function($scope, $ionicSideMenuDelegate, myl
     $scope.fuel.vehicle = {};
     $scope.fuel.vehicle.name = "Honda";
     $scope.fuel.previousOdometer = mylocalstorageservice.getPreviousOdometer('fuels');
+    $scope.fuel.litrerate = mylocalstorageservice.getPreviousFuelRate('fuels');
 
     $scope.openMenu = function () {
       $ionicSideMenuDelegate.toggleLeft();
     }
     $scope.save = function(fuel) {
+      console.log("in AddFuelController.save function");
       // calculate tripkm
       fuel.tripkm = parseInt(fuel.odometer) - parseInt(fuel.previousOdometer);
       
@@ -425,6 +444,26 @@ app.controller('AddFuelController', function($scope, $ionicSideMenuDelegate, myl
       $state.go('tabs.fuels');
     }
     
+    $scope.changelitres = function() {
+      console.log("change: litres..  update total");
+      $scope.fuel.total = $scope.fuel.litrerate*$scope.fuel.litres;
+    }
+
+    $scope.changerate = function() {
+      console.log("change: rate..  update total");
+      $scope.fuel.total = $scope.fuel.litrerate*$scope.fuel.litres;
+    }
+
+    $scope.changetotal = function() {
+      console.log("change: total.. ");
+      if($scope.fuel.litrerate>0) {
+        console.log("update litres");
+        $scope.fuel.litres = $scope.fuel.total / $scope.fuel.litrerate;
+      } else if ($scope.fuel.litres>0) {
+        console.log("update litrerate");
+        $scope.fuel.litrerate = $scope.fuel.total / $scope.fuel.litres;
+      }      
+    }
 });
 
 /*

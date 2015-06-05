@@ -240,7 +240,11 @@ app.service('FuelsService', function($q, mylocalstorageservice) {
 })
 
 
-app.config(function($stateProvider, $urlRouterProvider) {
+app.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
+  $ionicConfigProvider.backButton.previousTitleText(true);
+  $ionicConfigProvider.tabs.position('bottom');
+  $ionicConfigProvider.navBar.alignTitle('center');
+
   $stateProvider
     .state('tabs', {
       url: '/tab',

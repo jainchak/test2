@@ -134,19 +134,8 @@
       </ion-view>
     </script>      
 
-    <script type="text/javascript">
-      function submitaddform()
-      {
-        console.log("submit add form called...");
-        document.addfuelform.submit();
-      }
-    </script>   
-    
     <script id="addfuel.html" type="text/ng-template">
       <ion-view title="Add Fuel Details">
-        <ion-nav-buttons side="right">
-          <button type="submit" class="button button-clear button-icon ion-android-done" on-click="javascript: submitaddform()"></button>            
-        </ion-nav-buttons>          
         <ion-content padding="true">
           <form name="addfuelform" novalidate="novalidate" on-valid-submit="save(fuel)">
             <div class="list">
@@ -189,23 +178,19 @@
                 <i class="icon ion-alert-circled error col col-10"></i>
               </label>
             </div>
+            <div class="padding container">
+                <div class="row">
+                    <button class="button button-assertive button-small col col-40" ui-sref="tabs.fuels"> Cancel </button>
+                    <button class="button button-balanced  button-small col col-40 col-offset-10" type="submit"> Save </button>
+                </div>
+            </div>
           </form>
         </ion-content>
       </ion-view>
-    </script>         
-
-    <script type="text/javascript">
-      function submiteditform()
-      {
-        document.editfuelform.submit();
-      }
-    </script>           
+    </script>        
     
     <script id="editfuel.html" type="text/ng-template">
       <ion-view title="Edit Fuel Details">
-        <ion-nav-buttons side="right">
-          <button type="submit" class="button button-clear button-icon ion-android-done" on-click="javascript: submiteditform()"></button>            
-        </ion-nav-buttons>       
         <ion-content padding="true">
           <form name="editfuelform" novalidate="novalidate" on-valid-submit="save(fuel)">
             <div class="list">
@@ -247,6 +232,12 @@
                 <input type="text" ng-model="fuel.location" placeholder="Location" required="required" >
                 <i class="icon ion-alert-circled error col col-10"></i>
               </label>
+            </div>            
+            <div class="padding container">
+                <div class="row">
+                    <button class="button button-assertive button-small col col-40" ui-sref="tabs.fuels"> Cancel </button>
+                    <button class="button button-balanced  button-small col col-40 col-offset-10" type="submit"> Save </button>
+                </div>
             </div>
           </form>
         </ion-content>

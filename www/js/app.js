@@ -270,7 +270,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
       views: {
         'fuels-tab': {
           templateUrl: 'editfuel.html',
-          controller: 'EditFuelController',
+          controller: 'FuelController',
           resolve: {
             fuel: function($stateParams, FuelsService) {
                 console.log("inside tabs.fuel ");
@@ -286,10 +286,10 @@ app.config(function($stateProvider, $urlRouterProvider) {
       views: {
         'fuels-tab': {
           templateUrl: 'addfuel.html',
-          controller: 'AddFuelController',
+          controller: 'FuelController',
           resolve: {
             fuel: function($stateParams, FuelsService) {
-                return []
+                return {}
             }
           }
         }
@@ -397,27 +397,24 @@ app.controller('FuelsController', function($scope, mylocalstorageservice, $state
     //});
 });
 
-app.controller('EditFuelController', function($scope, fuel, mylocalstorageservice, $state) {
-    console.log("In EditFuelController...");
-    // set fuel to scope
-    $scope.fuel = fuel;
+app.controller('FuelController', function($scope, fuel, mylocalstorageservice, $state, $ionicSideMenuDelegate) {
+  console.log("In FuelController...");
+  console.log("input fuel : " + JSON.stringify(fuel));
 
+  // set fuel to scope
+  $scope.fuel = fuel;
+
+  var addOrEdit = '';
+
+  // find if add or edit and initialize scope variables.
+  if(fuel.id > 0) {
+    console.log("id exist...  edit scenario");
+    addOrEdit = 'edit';
     // set date formatter
     $scope.fuel.date = new Date(fuel.date);
-
-    $scope.save = function(fuel) {
-      mylocalstorageservice.updateObjectToArray('fuels', fuel, fuel.id);
-      console.log("fuel details updated to fuels.. transfering page to tabs.fuels");
-      //$scope.fuel = [];
-      //$scope.fuels = mylocalstorageservice.getObject('fuels');
-      $state.go('tabs.fuels');
-    }
-
-});
-
-app.controller('AddFuelController', function($scope, $ionicSideMenuDelegate, mylocalstorageservice, $state) {
-    console.log("In AddFuelController...");
-
+  } else {
+    console.log("id does not exist..  add scenario");
+    addOrEdit = 'add';
     // set default values
     $scope.fuel = {};
     $scope.fuel.id = mylocalstorageservice.getNextId('fuels');
@@ -426,44 +423,47 @@ app.controller('AddFuelController', function($scope, $ionicSideMenuDelegate, myl
     $scope.fuel.vehicle.name = "Honda";
     $scope.fuel.previousOdometer = mylocalstorageservice.getPreviousOdometer('fuels');
     $scope.fuel.litrerate = mylocalstorageservice.getPreviousFuelRate('fuels');
+  }
 
-    $scope.openMenu = function () {
-      $ionicSideMenuDelegate.toggleLeft();
-    }
-    $scope.save = function(fuel) {
-      console.log("in AddFuelController.save function");
+  $scope.openMenu = function () {
+    $ionicSideMenuDelegate.toggleLeft();
+  }
+
+  $scope.save = function(fuel) {
+    console.log("in FuelController.save function");
+    if(addOrEdit == 'add') {
       // calculate tripkm
       fuel.tripkm = parseInt(fuel.odometer) - parseInt(fuel.previousOdometer);
-      
-      console.log("save called for: " + fuel);
-      
       mylocalstorageservice.pushObjectToArray('fuels', fuel);
       console.log("fuel details added to fuels.. transfering page to tabs.fuels")
-      //$scope.fuel = [];
-      //$scope.fuels = mylocalstorageservice.getObject('fuels');
-      $state.go('tabs.fuels');
+    } else if(addOrEdit == 'edit') {
+      mylocalstorageservice.updateObjectToArray('fuels', fuel, fuel.id);
+      console.log("fuel details updated to fuels.. transfering page to tabs.fuels");
     }
-    
-    $scope.changelitres = function() {
-      console.log("change: litres..  update total");
-      $scope.fuel.total = $scope.fuel.litrerate*$scope.fuel.litres;
-    }
+    // transfer to Fuels list
+    $state.go('tabs.fuels');
+  }
 
-    $scope.changerate = function() {
-      console.log("change: rate..  update total");
-      $scope.fuel.total = $scope.fuel.litrerate*$scope.fuel.litres;
-    }
+  $scope.changelitres = function() {
+    console.log("change: litres..  update total");
+    $scope.fuel.total = $scope.fuel.litrerate*$scope.fuel.litres;
+  }
 
-    $scope.changetotal = function() {
-      console.log("change: total.. ");
-      if($scope.fuel.litrerate>0) {
-        console.log("update litres");
-        $scope.fuel.litres = $scope.fuel.total / $scope.fuel.litrerate;
-      } else if ($scope.fuel.litres>0) {
-        console.log("update litrerate");
-        $scope.fuel.litrerate = $scope.fuel.total / $scope.fuel.litres;
-      }      
-    }
+  $scope.changerate = function() {
+    console.log("change: rate..  update total");
+    $scope.fuel.total = $scope.fuel.litrerate*$scope.fuel.litres;
+  }
+
+  $scope.changetotal = function() {
+    console.log("change: total.. ");
+    if($scope.fuel.litrerate>0) {
+      console.log("update litres");
+      $scope.fuel.litres = $scope.fuel.total / $scope.fuel.litrerate;
+    } else if ($scope.fuel.litres>0) {
+      console.log("update litrerate");
+      $scope.fuel.litrerate = $scope.fuel.total / $scope.fuel.litres;
+    }      
+  }
 });
 
 /*

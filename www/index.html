@@ -211,17 +211,17 @@
               </label>
               <label class="item item-input" validated>
                 <span class="input-label">Litres:</span>
-                <input type="number" ng-model="fuel.litres" placeholder="Litres" required="required" >
+                <input type="number" ng-model="fuel.litres" ng-change="changelitres()" placeholder="Litres" required="required" >
                 <i class="icon ion-alert-circled error col col-10"></i>
               </label>
               <label class="item item-input" validated>
                 <span class="input-label">$/litre:</span>
-                <input type="number" ng-model="fuel.litrerate" placeholder="$/litre" required="required" >
+                <input type="number" ng-model="fuel.litrerate" ng-change="changerate()" placeholder="$/litre" required="required" >
                 <i class="icon ion-alert-circled error col col-10"></i>
               </label>
               <label class="item item-input" validated>
                 <span class="input-label">Total:</span>
-                <input type="number" ng-model="fuel.total" placeholder="Total" required="required" >
+                <input type="number" ng-model="fuel.total" ng-change="changetotal()" placeholder="Total" required="required" >
                 <i class="icon ion-alert-circled error col col-10"></i>
               </label>
               <label class="item item-toggle">
